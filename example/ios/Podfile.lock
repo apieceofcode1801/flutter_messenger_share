@@ -1,0 +1,43 @@
+PODS:
+  - facebook_messenger_share (0.0.1):
+    - FBSDKCoreKit
+    - FBSDKShareKit
+    - Flutter
+  - FBAEMKit (12.0.2):
+    - FBSDKCoreKit_Basics (= 12.0.2)
+  - FBSDKCoreKit (12.0.2):
+    - FBAEMKit (= 12.0.2)
+    - FBSDKCoreKit_Basics (= 12.0.2)
+  - FBSDKCoreKit_Basics (12.0.2)
+  - FBSDKShareKit (12.0.2):
+    - FBSDKCoreKit (= 12.0.2)
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - facebook_messenger_share (from `.symlinks/plugins/facebook_messenger_share/ios`)
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  trunk:
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKShareKit
+
+EXTERNAL SOURCES:
+  facebook_messenger_share:
+    :path: ".symlinks/plugins/facebook_messenger_share/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  facebook_messenger_share: 0a229acd704d832361398e234f21c5d83dd29d6d
+  FBAEMKit: c6b8ddf8371640fcd1a3b844d0f8884c8f334cea
+  FBSDKCoreKit: 506c0fd1c09a3075f62be8fa36bdd921c563daa9
+  FBSDKCoreKit_Basics: c0701d1634c944d60dd3c6361d66dbd0e707a456
+  FBSDKShareKit: 4598ab1ded1a83635746f8cd681948f97ad29560
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+
+COCOAPODS: 1.11.2
