@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: sharedSuccess == null
+          child: doneWithoutFailure == null
               ? Container()
               : Text(
                   'Share to Messenger ${!doneWithoutFailure! ? 'Failed' : 'Done'}',
