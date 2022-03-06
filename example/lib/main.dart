@@ -25,23 +25,25 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> shareToFacebook() async {
     try {
-      await FacebookMessengerShare.shareToMessenger(
+      await FacebookMessengerShare.instance.shareUrl(
           urlString: 'https://facebook.com',
-          onSuccess: () {
-            setState(() {
-              doneWithoutFailure = true;
-            });
-          },
-          onFailed: () {
-            setState(() {
-              doneWithoutFailure = false;
-            });
-          },
-          onCancelled: () {
-            setState(() {
-              doneWithoutFailure = true;
-            });
-          });
+          completeHandler: CompleteHandler(
+            onSuccess: () {
+              setState(() {
+                doneWithoutFailure = true;
+              });
+            },
+            onCancelled: () {
+              setState(() {
+                doneWithoutFailure = true;
+              });
+            },
+            onFailed: () {
+              setState(() {
+                doneWithoutFailure = false;
+              });
+            },
+          ));
     } on PlatformException {
       setState(() {
         doneWithoutFailure = false;

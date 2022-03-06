@@ -19,12 +19,8 @@ void main() {
 
   test('getPlatformVersion', () async {
     expect(
-        await FacebookMessengerShare.shareToMessenger(
-          urlString: 'urlString',
-          onSuccess: () {},
-          onFailed: () {},
-          onCancelled: () {},
-        ),
+        await FacebookMessengerShare.instance.shareUrl(
+            urlString: 'urlString', completeHandler: CompleteHandler()),
         1);
   });
 }

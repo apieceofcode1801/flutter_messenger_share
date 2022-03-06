@@ -1,28 +1,37 @@
 import Flutter
 import UIKit
 import FBSDKShareKit
+import FBSDKCoreKit
 
 public class SwiftFacebookMessengerSharePlugin: NSObject, FlutterPlugin {
-    
     var result: FlutterResult?
     
     public static func register(with registrar: FlutterPluginRegistrar) {
+        ApplicationDelegate.initialize()
         let channel = FlutterMethodChannel(name: "facebook_messenger_share", binaryMessenger: registrar.messenger())
         let instance = SwiftFacebookMessengerSharePlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
+        registrar.addApplicationDelegate(instance)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         self.result = result
-        guard call.method == "shareToMessenger", let urlString = call.arguments as? String else {
-            result(FlutterMethodNotImplemented)
-            return
-        }
+        let method = call.method
         
-        shareToMessenger(urlString: urlString)
+        if method == "shareUrl", let urlString = call.arguments as? String {
+            shareUrl(urlString: urlString)
+        } else if method == "shareImages" {
+            
+        } else if method == "shareDataImages" {
+            
+        } else if method == "shareVideos" {
+            
+        } else {
+            result(FlutterMethodNotImplemented)
+        }
     }
     
-    func shareToMessenger(urlString: String) {
+    private func shareUrl(urlString: String) {
         guard let url = URL(string: urlString) else {
             self.result?(0)
             return
@@ -41,12 +50,30 @@ public class SwiftFacebookMessengerSharePlugin: NSObject, FlutterPlugin {
         }
         
         dialog.show()
-        
     }
+    
+    /// START ALLOW HANDLE NATIVE FACEBOOK APP
+    public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
+        var options = [UIApplication.LaunchOptionsKey: Any]()
+        for (k, value) in launchOptions {
+            let key = k as! UIApplication.LaunchOptionsKey
+            options[key] = value
+        }
+        ApplicationDelegate.shared.application(application,didFinishLaunchingWithOptions: options)
+        return true
+    }
+    
+    public func application( _ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
+        let processed = ApplicationDelegate.shared.application(
+            app, open: url,
+            sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+            annotation: options[UIApplication.OpenURLOptionsKey.annotation])
+        return processed;
+    }
+    /// END ALLOW HANDLE NATIVE FACEBOOK APP
 }
 
 extension SwiftFacebookMessengerSharePlugin: SharingDelegate {
-    
     public func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
         self.result?(1)
     }
