@@ -1,7 +1,7 @@
 PODS:
   - facebook_messenger_share (0.0.1):
-    - FBSDKCoreKit
-    - FBSDKShareKit
+    - FBSDKCoreKit (~> 12.0.2)
+    - FBSDKShareKit (~> 12.0.2)
     - Flutter
   - FBAEMKit (12.0.2):
     - FBSDKCoreKit_Basics (= 12.0.2)
@@ -12,10 +12,18 @@ PODS:
   - FBSDKShareKit (12.0.2):
     - FBSDKCoreKit (= 12.0.2)
   - Flutter (1.0.0)
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - image_picker (0.0.1):
+    - Flutter
+  - Toast (4.0.0)
 
 DEPENDENCIES:
   - facebook_messenger_share (from `.symlinks/plugins/facebook_messenger_share/ios`)
   - Flutter (from `Flutter`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - image_picker (from `.symlinks/plugins/image_picker/ios`)
 
 SPEC REPOS:
   trunk:
@@ -23,20 +31,28 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKCoreKit_Basics
     - FBSDKShareKit
+    - Toast
 
 EXTERNAL SOURCES:
   facebook_messenger_share:
     :path: ".symlinks/plugins/facebook_messenger_share/ios"
   Flutter:
     :path: Flutter
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  image_picker:
+    :path: ".symlinks/plugins/image_picker/ios"
 
 SPEC CHECKSUMS:
-  facebook_messenger_share: 0a229acd704d832361398e234f21c5d83dd29d6d
+  facebook_messenger_share: 25f52f482359db4a6a9f4d4d1019b73c51c9bf19
   FBAEMKit: c6b8ddf8371640fcd1a3b844d0f8884c8f334cea
   FBSDKCoreKit: 506c0fd1c09a3075f62be8fa36bdd921c563daa9
   FBSDKCoreKit_Basics: c0701d1634c944d60dd3c6361d66dbd0e707a456
   FBSDKShareKit: 4598ab1ded1a83635746f8cd681948f97ad29560
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  fluttertoast: 16fbe6039d06a763f3533670197d01fc73459037
+  image_picker: 541dcbb3b9cf32d87eacbd957845d8651d6c62c3
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

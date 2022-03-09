@@ -3,8 +3,16 @@ import UIKit
 import FBSDKShareKit
 import FBSDKCoreKit
 
+
 public class SwiftFacebookMessengerSharePlugin: NSObject, FlutterPlugin {
     var result: FlutterResult?
+    
+    private func failedWithMessage(_ message: String) -> [String: Any] {
+        return ["code": 0, "message": message]
+    }
+    
+    private let succeeded = ["code": 1]
+    private let cancelled = ["code": -1]
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         ApplicationDelegate.initialize()
@@ -19,36 +27,55 @@ public class SwiftFacebookMessengerSharePlugin: NSObject, FlutterPlugin {
         let method = call.method
         
         if method == "shareUrl", let urlString = call.arguments as? String {
-            shareUrl(urlString: urlString)
-        } else if method == "shareImages" {
+            guard let url = URL(string: urlString) else {
+                result(failedWithMessage("Invalid URL"))
+                return
+            }
             
-        } else if method == "shareDataImages" {
+            let content = ShareLinkContent()
+            content.contentURL = url
             
-        } else if method == "shareVideos" {
+            share(content, result)
+        } else if method == "shareImages", let paths = call.arguments as? [String] {
+            let photos = paths.map ({ UIImage(contentsOfFile: $0) }).compactMap({$0}).map({SharePhoto(image: $0, userGenerated: true)})
+            let content = SharePhotoContent()
+            content.photos = photos
             
+            share(content, result)
+        } else if method == "shareDataImage" {
+            guard let flutterData = call.arguments as? FlutterStandardTypedData, let image = UIImage(data: flutterData.data) else {
+                result(failedWithMessage("Image data couldn't parsed"))
+                return
+            }
+            let content = SharePhotoContent()
+            content.photos = [SharePhoto(image: image, userGenerated: true)]
+
+            share(content, result)
+            
+        } else if method == "shareVideo" {
+            guard let flutterData = call.arguments as? FlutterStandardTypedData else {
+                result(failedWithMessage("Video data couldn't parsed"))
+                return
+            }
+            let content = ShareVideoContent()
+            content.video = ShareVideo(data: flutterData.data)
+
+            share(content, result)
         } else {
-            result(FlutterMethodNotImplemented)
+            result(failedWithMessage("Function is not implemented with iOS platform"))
         }
     }
     
-    private func shareUrl(urlString: String) {
-        guard let url = URL(string: urlString) else {
-            self.result?(0)
-            return
-        }
-        
-        let content = ShareLinkContent()
-        content.contentURL = url
-        
+    private func share(_ content: SharingContent, _ result: FlutterResult) {
         let dialog = MessageDialog(content: content, delegate: self)
         
         do {
             try dialog.validate()
         } catch {
+            result(failedWithMessage(error.localizedDescription))
             print(error)
-            self.result?(0)
         }
-        
+
         dialog.show()
     }
     
@@ -75,14 +102,14 @@ public class SwiftFacebookMessengerSharePlugin: NSObject, FlutterPlugin {
 
 extension SwiftFacebookMessengerSharePlugin: SharingDelegate {
     public func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
-        self.result?(1)
+        self.result?(succeeded)
     }
     
     public func sharer(_ sharer: Sharing, didFailWithError error: Error) {
-        self.result?(0)
+        self.result?(failedWithMessage(error.localizedDescription))
     }
     
     public func sharerDidCancel(_ sharer: Sharing) {
-        self.result?(-1)
+        self.result?(cancelled)
     }
 }

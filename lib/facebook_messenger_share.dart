@@ -3,15 +3,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 
-typedef Result = int;
-
-const Result cancelled = -1;
-const Result success = 1;
-const Result failed = 0;
-
 class CompleteHandler {
   final void Function()? onSuccess;
-  final void Function()? onFailed;
+  final void Function(String? message)? onFailed;
   final void Function()? onCancelled;
 
   CompleteHandler({this.onSuccess, this.onFailed, this.onCancelled});
@@ -27,13 +21,12 @@ abstract class IFacebookMessengerShare {
       {required List<String> paths, required CompleteHandler completeHandler});
 
   /// Share list of images with list of image data
-  Future shareDataImages(
-      {required List<Uint8List> data,
-      required CompleteHandler completeHandler});
+  Future shareDataImage(
+      {required Uint8List data, required CompleteHandler completeHandler});
 
   /// Share list of videos with video's paths
-  Future shareVideos(
-      {required List<String> paths, required CompleteHandler completeHandler});
+  Future shareVideo(
+      {required Uint8List data, required CompleteHandler completeHandler});
 }
 
 class FacebookMessengerShare implements IFacebookMessengerShare {
@@ -46,10 +39,10 @@ class FacebookMessengerShare implements IFacebookMessengerShare {
       MethodChannel('facebook_messenger_share');
 
   @override
-  Future shareDataImages(
-      {required List<Uint8List> data,
+  Future shareDataImage(
+      {required Uint8List data,
       required CompleteHandler completeHandler}) async {
-    final result = await _channel.invokeMethod<Result>('shareDataImages', data);
+    final result = await _channel.invokeMethod('shareDataImage', data);
     _handleResult(result, completeHandler);
   }
 
@@ -57,7 +50,7 @@ class FacebookMessengerShare implements IFacebookMessengerShare {
   Future shareImages(
       {required List<String> paths,
       required CompleteHandler completeHandler}) async {
-    final result = await _channel.invokeMethod<Result>('shareImages', paths);
+    final result = await _channel.invokeMethod('shareImages', paths);
     _handleResult(result, completeHandler);
   }
 
@@ -65,25 +58,39 @@ class FacebookMessengerShare implements IFacebookMessengerShare {
   Future shareUrl(
       {required String urlString,
       required CompleteHandler completeHandler}) async {
-    final result = await _channel.invokeMethod<Result>('shareUrl', urlString);
+    final result = await _channel.invokeMethod('shareUrl', urlString);
     _handleResult(result, completeHandler);
   }
 
   @override
-  Future shareVideos(
-      {required List<String> paths,
+  Future shareVideo(
+      {required Uint8List data,
       required CompleteHandler completeHandler}) async {
-    final result = await _channel.invokeMethod<Result>('shareVideos', paths);
+    final result = await _channel.invokeMethod('shareVideo', data);
     _handleResult(result, completeHandler);
   }
 
-  _handleResult(Result? result, CompleteHandler completeHandler) {
-    if (result == success && completeHandler.onSuccess != null) {
-      completeHandler.onSuccess!();
-    } else if (result == failed && completeHandler.onFailed != null) {
-      completeHandler.onFailed!();
-    } else if (result == cancelled && completeHandler.onCancelled != null) {
-      completeHandler.onCancelled!();
+  _handleResult(dynamic result, CompleteHandler completeHandler) {
+    if (result is Map) {
+      final shareResult = ShareResult.fromJson(result);
+      if (shareResult.code == 1 && completeHandler.onSuccess != null) {
+        completeHandler.onSuccess!();
+      } else if (shareResult.code == 0 && completeHandler.onFailed != null) {
+        completeHandler.onFailed!(shareResult.message);
+      } else if (shareResult.code == -1 &&
+          completeHandler.onCancelled != null) {
+        completeHandler.onCancelled!();
+      }
     }
   }
+}
+
+class ShareResult {
+  final int code;
+  final String? message;
+
+  const ShareResult(this.code, this.message);
+
+  factory ShareResult.fromJson(Map json) =>
+      ShareResult(json['code'], json['message'].toString());
 }
