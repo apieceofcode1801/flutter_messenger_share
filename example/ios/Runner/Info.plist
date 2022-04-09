@@ -31,6 +31,12 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookAppID</key>
+	<string>424167582815483</string>
+	<key>FacebookClientToken</key>
+	<string>7824343a0f8675ec1dfd3bd26de40394</string>
+	<key>FacebookDisplayName</key>
+	<string>Testing App</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fb-messenger-share-api</string>
