@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.annotation.NonNull
 import com.facebook.FacebookSdk
 import com.facebook.share.model.*
+import com.facebook.share.widget.ShareDialog
 import com.facebook.share.widget.MessageDialog
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -36,17 +37,32 @@ class FacebookMessengerSharePlugin: FlutterPlugin, MethodCallHandler,ActivityAwa
       when (call.method) {
         "shareDataImage" -> {
           Log.e("frank", "shareDataImage")
-          System.out.println("frank shareDataImage")
           // share an images as bytes
-          val data = call.arguments as ByteArray
-          val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
-          val photo = SharePhoto.Builder().setBitmap(bitmap).build()
-          val content = SharePhotoContent.Builder().addPhoto(photo).build()
+          try {
+            val data = call.arguments as ByteArray
+            System.out.println("frank shareDataImage with size ${data.size}")
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            val photo = SharePhoto.Builder().setBitmap(bitmap).build()
+            val content = SharePhotoContent.Builder().addPhoto(photo).build()
+            val activity = this.activityPluginBinding?.activity
+            if (null != activity) {
+              MessageDialog(activity).show(content,ShareDialog.Mode.AUTOMATIC)
+              //MessageDialog.show(this.activityPluginBinding?.activity, content)
+              mapResult["code"] = 1
+              mapResult["message"] = "share success"
+              result.success(mapResult)
+            }
+            else{
+              System.out.println("frank shareDataImage with null activity")
+            }
+          }
 
-          MessageDialog.show(this.activityPluginBinding?.activity, content)
-          mapResult["code"] = 1
-          mapResult["message"] = "share success"
-          result.success(mapResult)
+          catch (e: Exception){
+            mapResult["code"]  = 0
+            val message = e.message ?: "Something went wrong."
+            mapResult["message"] = message
+            result.error("0", message,mapResult)
+          }
 
           return
         }
@@ -57,6 +73,7 @@ class FacebookMessengerSharePlugin: FlutterPlugin, MethodCallHandler,ActivityAwa
           val listPaths = call.arguments as List<String>
           val mediaContentBuilder = ShareMediaContent.Builder()
           listPaths.forEach { path ->
+            System.out.println("frank shareImages path $path")
             val photo = SharePhoto.Builder().setImageUrl(Uri.parse(path)).build()
             mediaContentBuilder.addMedium(photo)
           }
@@ -73,6 +90,7 @@ class FacebookMessengerSharePlugin: FlutterPlugin, MethodCallHandler,ActivityAwa
           Log.e("frank", "shareUrl $url")
           System.out.println("frank shareUrl $url")
           val link = ShareLinkContent.Builder().setContentUrl(Uri.parse(url)).build()
+
           MessageDialog.show(this.activityPluginBinding?.activity, link)
           mapResult["code"] = 1
           mapResult["message"] = "share success"

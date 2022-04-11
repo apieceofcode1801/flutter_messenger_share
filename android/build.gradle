@@ -47,8 +47,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.facebook.android:facebook-share:13.0.0"
-    implementation "com.facebook.android:facebook-common:13.0.0"
-    implementation "com.facebook.android:facebook-core:13.0.0"
-    implementation "com.facebook.android:facebook-messenger:13.0.0"
+    implementation "com.facebook.android:facebook-share:13.1.0"
+
 }
