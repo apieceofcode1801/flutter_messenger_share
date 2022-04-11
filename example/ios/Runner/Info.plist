@@ -25,12 +25,18 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb424167582815483</string>
+				<string>fbYOUR_FACEBOOK_APP_ID</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookAppID</key>
+	<string>YOUR_FACEBOOK_APP_ID</string>
+	<key>FacebookClientToken</key>
+	<string>YOUR_FACEBOOK_CLIENT_TOKEN</string>
+	<key>FacebookDisplayName</key>
+	<string>YOUR_FACEBOOK_DISPLAY_NAME</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fb-messenger-share-api</string>
