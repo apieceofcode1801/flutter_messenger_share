@@ -1,3 +1,4 @@
 ## 0.0.1
-
-* TODO: Describe initial release.
+Add support for iOS
+## 0.0.2
+Add support for Android
