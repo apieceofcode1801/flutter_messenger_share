@@ -1,6 +1,6 @@
 name: facebook_messenger_share
-description: Flutter Facebook Messenger Share
-version: 0.0.2
+description: facebook messenger share for Flutter
+version: 0.0.3
 repository: https://github.com/apieceofcode1801/flutter_messenger_share
 
 environment:
